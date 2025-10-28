@@ -1,9 +1,11 @@
 # Module 14: Machine Learning Classification - Setup Guide
 
 ## Instructor Information
+
 **Lead Instructor**: Dennis Omboga Mongare
+
 **Role**: Lead Data Science Instructor
-**Contact**: [Your contact information]
+
 **Course**: Data Science B - Scalable Computing Series
 
 ## Environment Setup with UV
