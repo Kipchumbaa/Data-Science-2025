@@ -1,10 +1,10 @@
-# Module 15: Machine Learning Clustering and Dimensionality Reduction - Setup Guide
+# Module 14: Machine Learning Classification - Setup Guide
 
 ## Instructor Information
 **Lead Instructor**: Dennis Omboga Mongare
 **Role**: Lead Data Science Instructor
 **Contact**: [Your contact information]
-**Course**: Data Science B - Unsupervised Learning Series
+**Course**: Data Science B - Scalable Computing Series
 
 ## Environment Setup with UV
 
@@ -13,14 +13,15 @@ This module uses `uv` for dependency management and virtual environment isolatio
 ### Prerequisites
 - Python 3.13 or higher
 - `uv` package manager (install with: `pip install uv` or follow [uv installation guide](https://github.com/astral-sh/uv))
-- GPU support recommended for RAPIDS acceleration
+- At least 8GB free disk space (cleaned temporary caches if needed)
+- CPU-only setup (GPU acceleration optional for advanced users)
 
 ### Setup Commands
 
 #### Linux (Cinnamon Manjaro)
 ```bash
 # 1. Navigate to the module directory
-cd "Data-Science-B/15_module_machine_learning_clustering_and_dimensionality_Reduction"
+cd "Data-Science-B/14_module_machine_learning_classification"
 
 # 2. Sync dependencies and create virtual environment
 uv sync
@@ -30,15 +31,14 @@ source .venv/bin/activate
 
 # 4. Verify installation
 python -c "import sklearn; print(f'scikit-learn version: {sklearn.__version__}')"
+python -c "import xgboost; print(f'XGBoost version: {xgboost.__version__}')"
 python -c "import pandas, numpy, matplotlib, seaborn; print('Core libraries imported successfully')"
-python -c "import cuml; print(f'RAPIDS cuML version: {cuml.__version__}')"
-python -c "import cudf; print('RAPIDS cuDF available')"
 ```
 
 #### Windows (PowerShell/Command Prompt)
 ```powershell
 # 1. Navigate to the module directory
-cd "Data-Science-B\15_module_machine_learning_clustering_and_dimensionality_Reduction"
+cd "Data-Science-B\14_module_machine_learning_classification"
 
 # 2. Sync dependencies and create virtual environment
 uv sync
@@ -48,15 +48,14 @@ uv sync
 
 # 4. Verify installation
 python -c "import sklearn; print(f'scikit-learn version: {sklearn.__version__}')"
+python -c "import xgboost; print(f'XGBoost version: {xgboost.__version__}')"
 python -c "import pandas, numpy, matplotlib, seaborn; print('Core libraries imported successfully')"
-python -c "import cuml; print(f'RAPIDS cuML version: {cuml.__version__}')"
-python -c "import cudf; print('RAPIDS cuDF available')"
 ```
 
 #### macOS (Terminal)
 ```bash
 # 1. Navigate to the module directory
-cd "Data-Science-B/15_module_machine_learning_clustering_and_dimensionality_Reduction"
+cd "Data-Science-B/14_module_machine_learning_classification"
 
 # 2. Sync dependencies and create virtual environment
 uv sync
@@ -66,9 +65,52 @@ source .venv/bin/activate
 
 # 4. Verify installation
 python -c "import sklearn; print(f'scikit-learn version: {sklearn.__version__}')"
+python -c "import xgboost; print(f'XGBoost version: {xgboost.__version__}')"
 python -c "import pandas, numpy, matplotlib, seaborn; print('Core libraries imported successfully')"
-python -c "import cuml; print(f'RAPIDS cuML version: {cuml.__version__}')"
-python -c "import cudf; print('RAPIDS cuDF available')"
+```
+
+### Memory Optimization (Important for Cinnamon Manjaro)
+
+#### System Memory Management
+```bash
+# Check current memory usage
+free -h
+
+# Clear system cache
+sudo sync; sudo echo 3 > /proc/sys/vm/drop_caches
+
+# Monitor disk usage
+df -h
+```
+
+#### Python Memory Optimization
+```python
+# In your Python code, add memory management:
+import gc
+import sys
+
+# Force garbage collection
+gc.collect()
+
+# Monitor memory usage
+def memory_usage():
+    import psutil
+    process = psutil.Process()
+    return process.memory_info().rss / 1024 / 1024  # MB
+
+print(f"Memory usage: {memory_usage():.2f} MB")
+```
+
+#### Clean Temporary Files (if needed)
+```bash
+# Remove pip cache
+rm -rf ~/.cache/pip
+
+# Remove uv cache
+rm -rf ~/.cache/uv
+
+# Clean package manager cache
+sudo pacman -Scc  # Careful - removes all cached packages
 ```
 
 ### Running the Scripts
@@ -78,15 +120,11 @@ python -c "import cudf; print('RAPIDS cuDF available')"
 # Activate environment (if not already activated)
 source .venv/bin/activate
 
-# Run clustering lecture demo
+# Run lecture demo
 python "lecture_demo.py"
 
-# Run clustering student lab
-python "student.ipynb"  # Convert to .py if needed
-
-# Run specific analysis scripts
-python "clustering_analysis.py"
-python "dimensionality_reduction.py"
+# Run student lab
+python "student_lab.py"
 ```
 
 #### Jupyter Notebooks
@@ -129,40 +167,41 @@ jupyter notebook student.ipynb
 ### Dependencies Included
 
 This environment includes:
-- **scikit-learn 1.3.0+**: Traditional ML algorithms
-- **RAPIDS cuML 23.0+**: GPU-accelerated ML
-- **RAPIDS cuDF 23.0+**: GPU DataFrames
+- **scikit-learn 1.3.0+**: Core machine learning algorithms
 - **pandas 2.0.0+**: Data manipulation
 - **numpy 1.24.0+**: Numerical computing
 - **matplotlib 3.6.0+**: Data visualization
 - **seaborn 0.12.0+**: Statistical visualization
 - **jupyter 1.0.0+**: Interactive notebooks
 - **ipykernel 6.0.0+**: Jupyter kernel
-- **umap-learn 0.5.0+**: CPU UMAP implementation
-- **hdbscan 0.8.0+**: Hierarchical DBSCAN
 
-### GPU Setup (Recommended)
+**Note**: GPU dependencies removed for memory optimization. CPU-only implementations provide excellent performance for learning and most practical applications.
 
-#### RAPIDS Installation Notes
-RAPIDS requires CUDA-compatible GPU:
-- **CUDA 11.8+** or **CUDA 12.0+**
-- **NVIDIA GPU** with compute capability 6.0+
-- **GPU Memory**: 4GB+ recommended
+### Memory Management Best Practices
 
-#### GPU Verification
-```bash
-# Check GPU availability
-python -c "import cuml; print(f'CUDA available: {cuml.is_cuda_available()}')"
+#### Data Processing Memory Tips
+```python
+# Use memory-efficient data types
+df['Survived'] = df['Survived'].astype('int8')  # Instead of int64
+df['Pclass'] = df['Pclass'].astype('category')  # Categorical for repeated values
 
-# Check GPU memory
-python -c "
-import pynvml
-pynvml.nvmlInit()
-handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-info = pynvml.nvmlDeviceGetMemoryInfo(handle)
-print(f'GPU Memory: {info.total/1024**3:.1f}GB total, {info.free/1024**3:.1f}GB free')
-"
+# Process data in chunks for large datasets
+chunk_size = 1000
+for chunk in pd.read_csv('large_file.csv', chunksize=chunk_size):
+    # Process chunk
+    pass
+
+# Delete unused variables
+del large_dataframe
+gc.collect()
 ```
+
+#### Memory Optimization Tips
+- Process data in batches for large datasets
+- Use appropriate data types (int8, float32 instead of float64)
+- Clear memory between operations with `gc.collect()`
+- Monitor memory usage during processing
+- Use chunked reading for large files
 
 ### Troubleshooting
 
@@ -176,25 +215,16 @@ uv cache clean
 uv sync
 ```
 
-#### GPU Memory Issues
-```bash
-# Monitor GPU memory usage
-nvidia-smi
+#### Memory Issues
+- **Out of memory**: Reduce batch sizes, use chunked processing
+- **Slow performance**: Use memory-efficient data types
+- **Large datasets**: Process in chunks, use appropriate data types
+- **System hangs**: Monitor memory usage, clear caches regularly
 
-# Check GPU processes
-nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
-```
-
-#### RAPIDS Installation Issues
-If RAPIDS fails to install:
-```bash
-# Check CUDA version
-nvcc --version
-
-# Install specific RAPIDS version for your CUDA version
-# CUDA 11.8: pip install cuml-cu118
-# CUDA 12.0: pip install cuml-cu120
-```
+#### Disk Space Issues
+- **No space left**: Clean package caches, remove temporary files
+- **Installation fails**: Free up disk space, use CPU-only dependencies
+- **Slow downloads**: Clear download caches, check network connection
 
 #### Deactivate Environment
 ```bash
@@ -204,12 +234,11 @@ deactivate
 
 ### Dataset Requirements
 
-The scripts expect various datasets. Download if missing:
+The scripts expect sample datasets. Download if missing:
 ```bash
-# Example datasets
+# Example datasets (modify as needed)
+curl -o titanic.csv https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv
 curl -o iris.csv https://raw.githubusercontent.com/uiuc-cse/data-fa14/gh-pages/data/iris.csv
-curl -o wine.csv https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data
-curl -o digits.csv https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/sklearn/datasets/data/digits.csv
 ```
 
 ### Support
@@ -221,49 +250,59 @@ If you encounter issues:
 4. For GPU issues, verify CUDA installation and GPU compatibility
 5. Monitor memory usage when working with large datasets
 
-### Key Libraries Covered
+### Key ML Concepts Covered
 
-#### Clustering Algorithms
-- **K-means**: Partitioning clustering
-- **Hierarchical**: Agglomerative clustering
-- **DBSCAN**: Density-based clustering
-- **HDBSCAN**: Hierarchical density clustering
-
-#### Dimensionality Reduction
-- **PCA**: Principal Component Analysis
-- **t-SNE**: t-Distributed Stochastic Neighbor Embedding
-- **UMAP**: Uniform Manifold Approximation and Projection
-
-#### GPU Acceleration
-- **cuML K-means**: GPU-accelerated K-means
-- **cuML PCA**: GPU-accelerated PCA
-- **cuML UMAP**: GPU-accelerated UMAP
-- **cuML DBSCAN**: GPU-accelerated DBSCAN
+- **Supervised Learning**: Training, validation, test sets
+- **Classification Algorithms**: Linear models, trees, ensembles
+- **Model Evaluation**: Confusion matrix, ROC-AUC, cross-validation
+- **GPU Acceleration**: RAPIDS cuML for performance
+- **Hyperparameter Tuning**: Grid search, cross-validation
+- **Scalable ML**: Integration with Dask and distributed computing
 
 ### Performance Expectations
 
-#### CPU vs GPU Performance
-- **Small datasets (< 10K samples)**: 2-5x GPU speedup
-- **Medium datasets (10K-100K samples)**: 5-20x GPU speedup
-- **Large datasets (> 100K samples)**: 20-100x GPU speedup
-- **High-dimensional data**: Even larger speedups
+#### CPU-Only Setup (Current Configuration)
+- Suitable for learning and small to medium datasets
+- All algorithms work with excellent performance for educational purposes
+- Good for understanding concepts and practical applications
+- Memory-efficient for systems with limited resources
+- Perfect for development and prototyping
 
-#### Memory Requirements
-- **CPU**: Limited by system RAM
-- **GPU**: Limited by GPU memory (typically 8-24GB)
-- **Large datasets**: May require chunking or distributed processing
+#### Memory-Optimized Performance
+- Reduced memory footprint compared to GPU setups
+- Faster installation and startup times
+- Stable performance on resource-constrained systems
+- Suitable for production use on CPU-only infrastructure
 
 ### Next Steps
 
-After setting up the environment:
-1. Run the lecture demo to understand basic concepts
+After setup completion:
+1. Run the lecture demo to understand key concepts
 2. Complete the student lab exercises
 3. Experiment with different algorithms and parameters
-4. Try GPU acceleration on larger datasets
-5. Explore advanced techniques and custom implementations
+4. Monitor memory usage and optimize as needed
+5. Apply techniques to real datasets
+
+### System Health Check
+
+Before starting, verify your system is ready:
+
+```bash
+# Check available disk space
+df -h /
+
+# Check available memory
+free -h
+
+# Verify uv installation
+uv --version
+
+# Check Python version
+python --version
+```
 
 ---
 
 **Instructor**: Dennis Omboga Mongare
 **Last Updated**: October 2025
-**Version**: 1.0
+**Version**: 2.0 (Memory Optimized)
