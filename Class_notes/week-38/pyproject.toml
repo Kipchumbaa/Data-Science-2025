@@ -1,0 +1,17 @@
+[project]
+name = "13-module-scalable-computing-dask-and-ucx"
+version = "0.1.0"
+description = "Dask and UCX Module for Scalable Computing - Data Science Course"
+requires-python = ">=3.13"
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "matplotlib>=3.6.0",
+    "seaborn>=0.12.0",
+    "dask[dataframe]>=2024.1.0",
+    "dask[array]>=2024.1.0",
+    "dask[distributed]>=2024.1.0",
+    "jupyter>=1.0.0",
+    "ipykernel>=6.0.0",
+    "scikit-learn>=1.3.0"
+]
