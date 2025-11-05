@@ -299,10 +299,10 @@
   },
   "Lamech": {
     "student": "Lamech",
-    "completed": 13,
-    "remaining": 9,
-    "total_files": 18,
-    "completion_rate": 59.1,
+    "completed": 14,
+    "remaining": 8,
+    "total_files": 19,
+    "completion_rate": 63.6,
     "assignment_numbers": [
       1,
       2,
@@ -316,7 +316,8 @@
       14,
       15,
       16,
-      20
+      20,
+      22
     ],
     "files": [
       "assignment_10 (1).py",
@@ -324,6 +325,7 @@
       "assignment_20_lecture(17_20)_submission.py",
       "assignment_15_submission.py",
       "assignment_14_submission.py",
+      "assignment 22 submission.ipynb",
       "assignment_12.py",
       "untitled0 (1).py",
       "assignment_lecture_16_submission.py",
