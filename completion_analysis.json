@@ -301,7 +301,7 @@
     "student": "Lamech",
     "completed": 14,
     "remaining": 8,
-    "total_files": 19,
+    "total_files": 20,
     "completion_rate": 63.6,
     "assignment_numbers": [
       1,
@@ -328,6 +328,7 @@
       "assignment 22 submission.ipynb",
       "assignment_12.py",
       "untitled0 (1).py",
+      "Understanding Complexity Classes Assignment 23.ipynb",
       "assignment_lecture_16_submission.py",
       "week-01/lamech.py",
       "week-12/assignment_12(2).py",
