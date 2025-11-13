@@ -506,7 +506,7 @@
     "student": "bismark",
     "completed": 14,
     "remaining": 8,
-    "total_files": 26,
+    "total_files": 29,
     "completion_rate": 63.6,
     "assignment_numbers": [
       1,
@@ -537,6 +537,9 @@
       "Bismark23(B).ipynb",
       "bismark_wknd.ipynb",
       "Bismark9.ipynb",
+      "Bismark27.ipynb",
+      "bismarktitanic_clean.ipynb",
+      "Bismark26.ipynb",
       "Bismark8.ipynb",
       "Bismark23(A).ipynb",
       "bismark_leetcode.ipynb",
